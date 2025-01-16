@@ -1,3 +1,4 @@
+ 
 document.addEventListener("DOMContentLoaded", () => {
     const expenseForm = document.getElementById("expense-form");
     const expenseList = document.getElementById("expense-list");
@@ -17,12 +18,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 .reduce((sum, expense) => sum + expense.amount, 0);
         });
 
-         
         if (expenseChart) {
             expenseChart.destroy();
         }
 
-         
         expenseChart = new Chart(expenseChartCanvas, {
             type: "bar",
             data: {
@@ -45,8 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
             },
         });
     }
-
-     
+ 
     function displayExpenses(data) {
         expenseList.innerHTML = "";
         data.forEach(expense => {
@@ -70,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
         totalAmount.textContent = total.toFixed(2);
     }
 
-    
+     
     expenseForm.addEventListener("submit", (e) => {
         e.preventDefault();
 
@@ -78,6 +76,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const amount = parseFloat(document.getElementById("expense-amount").value);
         const category = document.getElementById("expense-category").value;
         const date = document.getElementById("expense-date").value;
+
+        
+        if (amount <= 0 || isNaN(amount)) {
+            alert("Please enter a valid amount greater than 0.");
+            return;  
+        }
 
         const expense = {
             id: Date.now(),
@@ -90,7 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
         expenses.push(expense);
         displayExpenses(expenses);
         updateTotalAmount();
-        updateChart(expenses);  
+        updateChart(expenses);
         expenseForm.reset();
     });
 
@@ -101,15 +105,15 @@ document.addEventListener("DOMContentLoaded", () => {
             expenses = expenses.filter(expense => expense.id !== id);
             displayExpenses(expenses);
             updateTotalAmount();
-            updateChart(expenses);  
+            updateChart(expenses);
         }
     });
 
-    
+     
     filterCategory.addEventListener("change", (e) => {
         const category = e.target.value;
         const filteredExpenses = category === "All" ? expenses : expenses.filter(expense => expense.category === category);
         displayExpenses(filteredExpenses);
-        updateChart(filteredExpenses); 
+        updateChart(filteredExpenses);
     });
 });
